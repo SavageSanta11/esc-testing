@@ -4,83 +4,54 @@ import com.opencsv.CSVWriter;
 
 import java.io.*;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 
 //Week 8 testing campaign
 public class HelloWorld {
-    public static void main(String[] args){
-       String path1 = "C:\\Users\\GigaB\\Documents\\Term 5\\Term 5 ESC\\sample_file_1.csv";
-        String path2 = "C:\\Users\\GigaB\\Documents\\Term 5\\Term 5 ESC\\sample_file_3.csv";
-        compare_csv(path1, path2);
+    public static void main(String[] args) throws Exception{
+        ArrayList<String> compare = new ArrayList<String>();
+        //The result is stored in compare.csv file in " " format
+        String result = "";
+
+        Scanner csv1 = new Scanner(new File("./src/sample_file_1.csv"));
+
+        Scanner csv3 = new Scanner(new File("./src/sample_file_3.csv"));
+        //use comma to slice the csv file
+        csv1.useDelimiter(",");
+        csv3.useDelimiter(",");
+
+        while (csv1.hasNextLine() && csv3.hasNextLine()) {
+
+            String first_line_csv1 = csv1.nextLine();
+
+            String first_line_csv3= csv3.nextLine();
+
+            if (!first_line_csv1.equals(first_line_csv3)) {
+
+                compare.add(first_line_csv1);
+                compare.add(first_line_csv3);
+            }
+        }
+
+        csv1.close();
+        csv3.close();
+
+        // Write to the new File result.csv
+        FileWriter fw = new FileWriter("./src/result.csv");
+        //iterate through the size of result.csv and add the lines to it
+        try{
+            for (int j = 0; j < compare.size(); j++) {
+                result = result + compare.get(j) + "\n";
+            }
+            //get exception to prevent exceptions from occuring
+        } catch (Exception ex) {
+            System.out.println("cannot write to result.csv file");
+        }
+        fw.write(result);
+        fw.close();
     }
 
-    public static void compare_csv(String path1, String path2){
-        String line1;
-        HashMap<String, String> f1 = new HashMap<String, String>();
-        HashMap<String, String> f2 = new HashMap<String, String>();
-        HashMap<String, String[]> f1asarray = new HashMap<String, String[]>();
-        HashMap<String, String[]> f2asarray = new HashMap<String, String[]>();
-        //Reading first file
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(path1));
-            while((line1 = br.readLine())!=null){
 
-                String [] values = line1.split(",");
-                f1.put(values[0], line1);
-                f1asarray.put(values[0],values);
-
-            }
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
-        //Reading 2nd file
-
-        String line2 = "";
-        try {
-            BufferedReader br2 = new BufferedReader(new FileReader(path2));
-            while((line2 = br2.readLine())!=null){
-                String [] values = line2.split(",");
-                f2.put(values[0], line2);
-                f2asarray.put(values[0],values);
-            }
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
-        //comparing the two files
-        List<String[]> deleted = new ArrayList<String[]>();
-        for(String entry : f1.keySet()) {
-            if(f2.containsKey(entry)) {
-                if(!((f1.get(entry)).equals(f2.get(entry)))){
-                    deleted.add(f1asarray.get(entry));
-                    deleted.add(f2asarray.get(entry));
-                    System.out.println(f1.get(entry));
-                    System.out.println(f1.get(entry));
-                }
-            }
-        }
-
-        String filePath = "C:\\Users\\GigaB\\Documents\\Term 5\\Term 5 ESC\\sample_output";
-        //writing the output csv file
-        File file = new File(filePath);
-        try {
-            // create FileWriter object with file as parameter
-            FileWriter outputfile = new FileWriter(file);
-
-            // create CSVWriter object filewriter object as parameter
-            CSVWriter writer = new CSVWriter(outputfile);
-
-            writer.writeAll(deleted);
-
-            // closing writer connection
-            writer.close();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
