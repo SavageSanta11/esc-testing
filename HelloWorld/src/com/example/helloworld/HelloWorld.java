@@ -1,7 +1,5 @@
 package com.example.helloworld;
 
-import com.opencsv.CSVWriter;
-
 import java.io.*;
 import java.util.*;
 import java.util.ArrayList;
@@ -10,14 +8,12 @@ import java.util.Scanner;
 
 //Week 8 testing campaign
 public class HelloWorld {
-    public static void main(String[] args) throws Exception{
+
+    public static void compare_csv(Scanner csv1, Scanner csv3) throws IOException {
         ArrayList<String> compare = new ArrayList<String>();
         //The result is stored in compare.csv file in " " format
         String result = "";
 
-        Scanner csv1 = new Scanner(new File("./src/sample_file_1.csv"));
-
-        Scanner csv3 = new Scanner(new File("./src/sample_file_3.csv"));
         //use comma to slice the csv file
         csv1.useDelimiter(",");
         csv3.useDelimiter(",");
@@ -51,6 +47,14 @@ public class HelloWorld {
         }
         fw.write(result);
         fw.close();
+    }
+    public static void main(String[] args) throws Exception{
+
+        Scanner csv1 = new Scanner(new File("./src/sample_file_1.csv"));
+
+        Scanner csv3 = new Scanner(new File("./src/sample_file_3.csv"));
+
+        compare_csv(csv1, csv3);
     }
 
 
